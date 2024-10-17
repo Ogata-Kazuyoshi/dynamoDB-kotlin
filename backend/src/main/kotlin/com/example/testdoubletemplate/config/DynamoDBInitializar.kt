@@ -26,6 +26,9 @@ class DynamoDBInitializer(
     @PostConstruct
     fun initializeDynamoDB() {
         println("test")
+        println("test1")
+        println("test1")
+        println("test2")
         createCustomerTable()
     }
 
