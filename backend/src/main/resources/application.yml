@@ -1,9 +1,13 @@
 spring:
+  profiles:
+    active: local
   application:
     name: dynamodb-try
 
+
 dynamodb:
   endpoint: ${DYNAMODB_ENDPOINT}
-  table:
-    customer:
-      name: InformationEntities
+  region: ${DYNAMODB_REGION}
+
+server:
+  port: 8889

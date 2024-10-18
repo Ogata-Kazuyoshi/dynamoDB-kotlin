@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   dynamodb-local:
-    container_name: dynamodb-local-excel
+    container_name: dynamodb-local-kotlin
     image: amazon/dynamodb-local
     ports:
       - '8086:8000'
@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   dynamodb-admin:
-    container_name: dynamodb-admin-excel
+    container_name: dynamodb-admin-kotlin
     image: aaronshaf/dynamodb-admin:latest
     environment:
       - DYNAMO_ENDPOINT=http://dynamodb-local:8000
