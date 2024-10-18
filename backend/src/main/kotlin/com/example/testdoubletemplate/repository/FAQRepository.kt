@@ -13,12 +13,18 @@ interface FAQRepository {
 @Repository
 class DefaultFAQRepository(
     @Qualifier("dynamoDBRepositoryForInformation")
-    private val dynamoDBRepository: NoSQLRepository<InformationTableEntity>
+    val dynamoDBRepository: NoSQLRepository<InformationTableEntity>
 ): FAQRepository {
     override fun findAllFAQList(): List<FAQ> {
         return dynamoDBRepository
             .findAllByPK("FAQ")
-            .map { FAQ(it.answer, it.question) }
+            .map { FAQ(
+                faqCategoryName = it.faqCategoryName,
+                answer = it.answer,
+                question = it.question,
+                answerCreateAt = it.answerCreateAt,
+                questionCreateAt = it.questionCreateAt
+            ) }
     }
 
 }

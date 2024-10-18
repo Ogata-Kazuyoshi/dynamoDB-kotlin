@@ -14,6 +14,10 @@ data class InformationTableEntity(
     var faqCategoryName: String = "",
     var answer: String = "",
     var question: String = "",
-    var createAtAnswer: String = "",
-    var createAtQuestion: String = "",
+    var answerCreateAt: String = "",
+    var questionCreateAt: String = "",
+    var noticeTitle: String= "",
+    var noticeTag: String = "",
+    var noticeDescription: String = "",
+    var noticeCreateAt: String = ""
 )
