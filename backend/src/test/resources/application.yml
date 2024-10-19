@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: dynamodb-try
+
+
+dynamodb:
+  endpoint: http://localhost:1
+  region: hogeregion
