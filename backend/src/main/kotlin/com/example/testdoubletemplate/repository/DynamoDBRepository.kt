@@ -8,6 +8,7 @@ import java.util.stream.Collectors
 
 interface NoSQLRepository<Table> {
     fun findAllByPK(pk: String): List<Table>
+    fun findItemByPKandSK(pk: String, sk: String): Table?
 }
 
 class DynamoDBRepository<Table> (
@@ -30,5 +31,18 @@ class DynamoDBRepository<Table> (
             .stream()
             .flatMap { page -> page.items().stream() }
             .collect(Collectors.toList())
+    }
+
+    override fun findItemByPKandSK(pk: String, sk: String): Table? {
+        val key = Key.builder()
+            .partitionValue(pk)
+            .sortValue(sk)
+            .build()
+
+        return try {
+            dynamoDBTable.getItem(key)
+        } catch (e: Exception) {
+            null
+        }
     }
 }
