@@ -1,67 +1,40 @@
-# Test Double Template
+# DynamoDB✖️SpringBoot（Kotlin）
 
 <details open="open">
 <summary>目次</summary>
 
 
-
-- [Vitestのセットアップ](#Vitestのセットアップ)
-- [testDouble概要](#testDouble概要)
-
-
+- [今回のシステム概要図](#今回のシステム概要図)
+- [informationTable設計](#informationTable設計)
 - [参考](#参考)
+</details>
+
+# 今回のシステム概要図
+<details>
+<summary> システム概要図</summary>
 
 </details>
 
-# Vitestのセットアップ
+
+
+
+# informationTable設計
 
 <details>
-<summary> 1. 必要ライブラリーのインストール</summary>
-下記を追加
+<summary> 1. RDSと同様にER図を考える</summary>
 
-```package.json
- "devDependencies": {
-    "@testing-library/dom": "^9.3.3",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/jsdom": "^21.1.3",
-    "jsdom": "^24.0.0",
-    "vitest": "^0.34.4"
-  }
-```
+![](./assets/informationTable1.png)
 </details>
 
 <details>
-<summary> 2. test-setup.jsの設定</summary>
+<summary> 2. アクセスパターンを考えて、全てを網羅できるテーブルを考える</summary>
 
-```js
-import {expect} from 'vitest'
-import matchers from "@testing-library/jest-dom/matchers";
-
-expect.extend(matchers)
-```
+![](./assets/informationTable2.png)
 </details>
 
-<details>
-<summary> 3. vite.config.tsの設定</summary>
-下記を追加
 
-```ts
-import {InlineConfig} from "vitest";
-const testConfig: InlineConfig = {
-  environment: 'jsdom',
-  setupFiles: ['./test-setup.js'],
-  globals: true,
-  include: ['./src/**/*.test.{tsx,ts}'],
-}
-export default defineConfig({
-  test: testConfig,
-})
-```
-</details>
-
-# testDouble概要
 
 # 参考
-- [getByRoleで取れるタグ](https://qiita.com/tondemonai7/items/3f7ed9bd6af1e0c3dfb7)
+
+[Dynamo設計のQuita](https://qiita.com/_kensh/items/2351096e6c3bf431ff6f)
+

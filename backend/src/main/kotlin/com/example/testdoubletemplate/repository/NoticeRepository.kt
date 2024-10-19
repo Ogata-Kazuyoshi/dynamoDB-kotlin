@@ -2,7 +2,6 @@ package com.example.testdoubletemplate.repository
 
 import com.example.testdoubletemplate.entity.InformationTableEntity
 import com.example.testdoubletemplate.model.Notice
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Repository
 
 interface NoticeRepository {
@@ -11,7 +10,6 @@ interface NoticeRepository {
 
 @Repository
 class DefaultNoticeRepository(
-    @Qualifier("dynamoDBRepositoryForInformation")
     var dynamoDBRepository: NoSQLRepository<InformationTableEntity>
 ): NoticeRepository {
     override fun findAllNoticeList(): List<Notice> {

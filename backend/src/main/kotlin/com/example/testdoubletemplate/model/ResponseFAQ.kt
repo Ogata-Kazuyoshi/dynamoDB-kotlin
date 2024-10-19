@@ -7,5 +7,7 @@ data class ResponseFAQ(
 
 data class QuestionAndAnswer(
     val question: String,
-    val answer: String
+    val answer: String,
+    val answerCreateAt: String,
+    val questionCreateAt: String
 )

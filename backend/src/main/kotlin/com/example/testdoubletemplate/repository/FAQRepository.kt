@@ -2,7 +2,6 @@ package com.example.testdoubletemplate.repository
 
 import com.example.testdoubletemplate.entity.InformationTableEntity
 import com.example.testdoubletemplate.model.FAQ
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Repository
 
 
@@ -12,7 +11,6 @@ interface FAQRepository {
 
 @Repository
 class DefaultFAQRepository(
-    @Qualifier("dynamoDBRepositoryForInformation")
     val dynamoDBRepository: NoSQLRepository<InformationTableEntity>
 ): FAQRepository {
     override fun findAllFAQList(): List<FAQ> {

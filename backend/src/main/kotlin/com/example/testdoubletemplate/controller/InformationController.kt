@@ -1,7 +1,7 @@
 package com.example.testdoubletemplate.controller
 
-import com.example.testdoubletemplate.model.FAQ
 import com.example.testdoubletemplate.model.Notice
+import com.example.testdoubletemplate.model.ResponseFAQ
 import com.example.testdoubletemplate.service.FAQService
 import com.example.testdoubletemplate.service.NoticeService
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,7 +15,7 @@ class InformationController(
     val noticeService: NoticeService
 ) {
     @GetMapping("/faq")
-    fun faqController(): List<FAQ> {
+    fun faqController(): List<ResponseFAQ> {
         return faqService.findAllFAQList()
     }
 

@@ -13,7 +13,9 @@ class DefaultNoticeService(
     val noticeRepository: NoticeRepository
 ): NoticeService {
     override fun findAllNotices(): List<Notice> {
-        return noticeRepository.findAllNoticeList()
+        return noticeRepository.findAllNoticeList().sortedByDescending { item ->
+            item.noticeCreateAt
+        }
     }
 
 }
