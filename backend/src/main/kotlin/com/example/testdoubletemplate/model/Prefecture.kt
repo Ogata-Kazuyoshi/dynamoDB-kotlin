@@ -6,3 +6,12 @@ data class Prefecture(
     val populationOfPrefecture: Int,
     val metropolitan: String
 )
+
+fun Prefecture.removeOriginalPrefecture(): Prefecture {
+    return Prefecture(
+        prefectureName = this.prefectureName.substringAfter("#"),
+        areaOfPrefecture = this.areaOfPrefecture,
+        populationOfPrefecture = this.populationOfPrefecture,
+        metropolitan = this.metropolitan,
+    )
+}

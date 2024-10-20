@@ -1,6 +1,7 @@
 package com.example.testdoubletemplate.repository
 
 import com.example.testdoubletemplate.entity.JapanTableEntity
+import com.example.testdoubletemplate.entity.toCity
 import com.example.testdoubletemplate.model.City
 import org.springframework.stereotype.Repository
 
@@ -15,34 +16,14 @@ class DefaultCityRepository(
     val dynamoDBRepository: NoSQLRepository<JapanTableEntity>
 ): CityRepository{
     override fun findAllCities(): List<City> {
-        val items = dynamoDBRepository.findAllByPK("City")
-
-        return items.map { City(
-            cityName = it.mainSk,
-            belongPrefecture = it.belongPrefecture,
-            areaOfPrefecture = it.areaOfPrefecture,
-            populationOfPrefecture = it.populationOfPrefecture,
-            metropolitan = it.metropolitan,
-            areaOfCity = it.areaOfCity,
-            populationOfCity = it.populationOfCity,
-        ) }
+        return dynamoDBRepository.findAllByPK("City").map { it.toCity() }
     }
 
     override fun findCitiesByPrefecture(prefecture: String): List<City> {
-        val items = dynamoDBRepository.findAllByGSI(
+        return dynamoDBRepository.findAllByGSI(
             indexName = "BelongPrefectureGSI",
             pk = prefecture
-        )
-
-        return items.map { City(
-            cityName = it.mainSk,
-            belongPrefecture = it.belongPrefecture,
-            areaOfPrefecture = it.areaOfPrefecture,
-            populationOfPrefecture = it.populationOfPrefecture,
-            metropolitan = it.metropolitan,
-            areaOfCity = it.areaOfCity,
-            populationOfCity = it.populationOfCity,
-        ) }
+        ).map { it.toCity() }
     }
 
     override fun findCityByCityName(cityName: String): City? {
@@ -50,16 +31,7 @@ class DefaultCityRepository(
             pk = "City",
             sk = cityName
         )
-
-        return item?.let { City(
-            cityName = it.mainSk,
-            belongPrefecture = it.belongPrefecture,
-            areaOfPrefecture = it.areaOfPrefecture,
-            populationOfPrefecture = it.populationOfPrefecture,
-            metropolitan = it.metropolitan,
-            areaOfCity = it.areaOfCity,
-            populationOfCity = it.populationOfCity,
-        ) }
+        return item?.toCity()
     }
 
 }

@@ -1,5 +1,7 @@
 package com.example.testdoubletemplate.entity
 
+import com.example.testdoubletemplate.model.City
+import com.example.testdoubletemplate.model.Prefecture
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSecondaryPartitionKey
@@ -24,3 +26,24 @@ data class JapanTableEntity(
     var areaOfCity: Double = 0.0,
     var populationOfCity: Int = 0,
 )
+
+fun JapanTableEntity.toPrefecture(): Prefecture {
+    return Prefecture(
+        prefectureName = this.mainSk,
+        areaOfPrefecture = this.areaOfPrefecture,
+        populationOfPrefecture = this.populationOfPrefecture,
+        metropolitan = this.metropolitan,
+    )
+}
+
+fun JapanTableEntity.toCity(): City {
+    return City(
+        cityName = this.mainSk,
+        belongPrefecture = this.belongPrefecture,
+        areaOfPrefecture = this.areaOfPrefecture,
+        populationOfPrefecture = this.populationOfPrefecture,
+        metropolitan = this.metropolitan,
+        areaOfCity = this.areaOfCity,
+        populationOfCity = this.populationOfCity,
+    )
+}

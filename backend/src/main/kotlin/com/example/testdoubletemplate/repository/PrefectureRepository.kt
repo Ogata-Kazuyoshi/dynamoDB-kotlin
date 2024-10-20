@@ -1,6 +1,7 @@
 package com.example.testdoubletemplate.repository
 
 import com.example.testdoubletemplate.entity.JapanTableEntity
+import com.example.testdoubletemplate.entity.toPrefecture
 import com.example.testdoubletemplate.model.Prefecture
 import org.springframework.stereotype.Repository
 
@@ -16,36 +17,19 @@ class DefaultPrefectureRepository(
 ): PrefectureRepository{
     override fun findAllPrefectures(): List<Prefecture> {
         return dynamoDBRepository.findAllByPK("Prefecture")
-            .map { Prefecture(
-                prefectureName = it.mainSk,
-                areaOfPrefecture = it.areaOfPrefecture,
-                populationOfPrefecture = it.populationOfPrefecture,
-                metropolitan = it.metropolitan
-            ) }
+            .map { it.toPrefecture()}
     }
 
     override fun findPrefecture(sk: String): Prefecture? {
         val item = dynamoDBRepository.findItemByPKandSK("Prefecture",sk)
-        return item?.let {
-            Prefecture(
-                prefectureName = it.mainSk,
-                areaOfPrefecture = it.areaOfPrefecture,
-                populationOfPrefecture = it.populationOfPrefecture,
-                metropolitan = it.metropolitan
-            )
-        }
+        return item?.toPrefecture()
     }
 
     override fun findNearPrefectures(prefectureName: String): List<Prefecture> {
         return dynamoDBRepository.findAllByPKandSKBegin(
             pk = "NextToPrefecture",
             skBegin = "$prefectureName#"
-        ).map { Prefecture(
-            prefectureName = it.mainSk,
-            areaOfPrefecture = it.areaOfPrefecture,
-            populationOfPrefecture = it.populationOfPrefecture,
-            metropolitan = it.metropolitan,
-        )}
+        ).map { it.toPrefecture()}
     }
 
 }

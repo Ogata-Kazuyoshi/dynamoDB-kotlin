@@ -2,6 +2,8 @@ package com.example.testdoubletemplate.service
 
 import com.example.testdoubletemplate.model.Prefecture
 import com.example.testdoubletemplate.model.ResponseCity
+import com.example.testdoubletemplate.model.toPrefecture
+import com.example.testdoubletemplate.model.toResponseCity
 import com.example.testdoubletemplate.repository.CityRepository
 import org.springframework.stereotype.Service
 
@@ -17,43 +19,20 @@ class DefaultCityService(
     val cityRepository: CityRepository
 ): CityService {
     override fun findAllCities(): List<ResponseCity> {
-        val citiesAllAttributes = cityRepository.findAllCities()
-
-        return citiesAllAttributes.map { ResponseCity(
-            cityName = it.cityName,
-            areaOfCity = it.areaOfCity,
-            populationOfCity = it.populationOfCity,
-        )}
+        return cityRepository.findAllCities()
+            .map { it.toResponseCity() }
     }
 
     override fun findCitiesByPrefecture(prefecture: String): List<ResponseCity> {
-        val citiesAllAttributes = cityRepository.findCitiesByPrefecture(prefecture)
-
-        return citiesAllAttributes.map { ResponseCity(
-            cityName = it.cityName,
-            areaOfCity = it.areaOfCity,
-            populationOfCity = it.populationOfCity,
-        )}
+        return cityRepository.findCitiesByPrefecture(prefecture)
+            .map { it.toResponseCity() }
     }
 
     override fun findCityByCityName(cityName: String): ResponseCity? {
-        val cityAttribute = cityRepository.findCityByCityName(cityName)
-
-        return cityAttribute?.let{ResponseCity(
-            cityName = it.cityName,
-            areaOfCity = it.areaOfCity,
-            populationOfCity = it.populationOfCity,
-        )}
+        return cityRepository.findCityByCityName(cityName)?.toResponseCity()
     }
 
     override fun findBelongPrefectureByCityName(cityName: String): Prefecture? {
-        val cityAttribute = cityRepository.findCityByCityName(cityName)
-
-        return cityAttribute?.let { Prefecture(
-            prefectureName = it.belongPrefecture,
-            areaOfPrefecture = it.areaOfPrefecture,
-            populationOfPrefecture = it.populationOfPrefecture,
-            metropolitan = it.metropolitan,
-        ) }
+        return cityRepository.findCityByCityName(cityName)?.toPrefecture()
     }
 }

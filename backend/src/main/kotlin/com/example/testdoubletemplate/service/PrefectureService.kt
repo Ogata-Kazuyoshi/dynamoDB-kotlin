@@ -1,6 +1,7 @@
 package com.example.testdoubletemplate.service
 
 import com.example.testdoubletemplate.model.Prefecture
+import com.example.testdoubletemplate.model.removeOriginalPrefecture
 import com.example.testdoubletemplate.repository.PrefectureRepository
 import org.springframework.stereotype.Service
 
@@ -23,13 +24,9 @@ class DefaultPrefectureService(
     }
 
     override fun findNearPrefectures(prefectureName: String): List<Prefecture> {
-        val items = prefectureRepository.findNearPrefectures(prefectureName)
-        return items.map { Prefecture(
-            prefectureName = it.prefectureName.substringAfter("#"),
-            areaOfPrefecture = it.areaOfPrefecture,
-            populationOfPrefecture = it.populationOfPrefecture,
-            metropolitan = it.metropolitan,
-        ) }
+        return prefectureRepository.findNearPrefectures(prefectureName)
+            .map { it.removeOriginalPrefecture() }
+
     }
 
 }
