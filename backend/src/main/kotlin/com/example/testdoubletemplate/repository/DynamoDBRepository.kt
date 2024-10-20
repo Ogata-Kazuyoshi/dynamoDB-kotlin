@@ -22,9 +22,7 @@ class DynamoDBRepository<Table> (
                     .build()
             )
 
-        return dynamoDBTable
-            .query(queryConditional)
-            .flatMap { it.items() }
+        return dynamoDBQueryForOriginalTable(queryConditional)
     }
 
     override fun findItemByPKandSK(pk: String, sk: String): Table? {
@@ -49,9 +47,7 @@ class DynamoDBRepository<Table> (
                     .build()
             )
 
-        return dynamoDBTable
-            .query(queryConditional)
-            .flatMap { it.items() }
+        return dynamoDBQueryForOriginalTable(queryConditional)
     }
 
     override fun findAllByGSI(indexName: String, pk: String): List<Table> {
@@ -62,9 +58,20 @@ class DynamoDBRepository<Table> (
                     .build()
             )
 
-        return dynamoDBTable
-            .index(indexName)
-            .query(queryConditional)
-            .flatMap { it.items() }
+        return dynamoDBQueryForSecondaryTable(indexName, queryConditional)
     }
+
+    private fun dynamoDBQueryForOriginalTable(
+        queryConditional: QueryConditional?
+    ) = dynamoDBTable
+        .query(queryConditional)
+        .flatMap { it.items() }
+
+    private fun dynamoDBQueryForSecondaryTable(
+        indexName: String,
+        queryConditional: QueryConditional?
+    ) = dynamoDBTable
+        .index(indexName)
+        .query(queryConditional)
+        .flatMap { it.items() }
 }
