@@ -38,6 +38,13 @@ class JapanController(
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "not found city")
     }
 
+    @GetMapping("prefectures/nearby/{prefectureName}")
+    fun nearPrefectureController(
+        @PathVariable prefectureName: String
+    ): List<Prefecture> {
+        return prefectureService.findNearPrefectures(prefectureName)
+    }
+
     @GetMapping("cities")
     fun citiesController(): List<ResponseCity>{
         return cityService.findAllCities()

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 interface PrefectureService {
     fun findAllPrefectures(): List<Prefecture>
     fun findPrefecture(sk: String): Prefecture?
+    fun findNearPrefectures(prefectureName: String): List<Prefecture>
 }
 
 @Service
@@ -19,6 +20,16 @@ class DefaultPrefectureService(
 
     override fun findPrefecture(sk: String): Prefecture? {
         return prefectureRepository.findPrefecture(sk)
+    }
+
+    override fun findNearPrefectures(prefectureName: String): List<Prefecture> {
+        val items = prefectureRepository.findNearPrefectures(prefectureName)
+        return items.map { Prefecture(
+            prefectureName = it.prefectureName.substringAfter("#"),
+            areaOfPrefecture = it.areaOfPrefecture,
+            populationOfPrefecture = it.populationOfPrefecture,
+            metropolitan = it.metropolitan,
+        ) }
     }
 
 }

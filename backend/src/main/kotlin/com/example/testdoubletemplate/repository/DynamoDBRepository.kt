@@ -7,6 +7,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional
 interface NoSQLRepository<Table> {
     fun findAllByPK(pk: String): List<Table>
     fun findItemByPKandSK(pk: String, sk: String): Table?
+    fun findAllByPKandSKBegin(pk: String, skBegin: String): List<Table>
     fun findAllByGSI(indexName: String, pk: String): List<Table>
 }
 
@@ -37,6 +38,20 @@ class DynamoDBRepository<Table> (
         } catch (e: Exception) {
             null
         }
+    }
+
+    override fun findAllByPKandSKBegin(pk: String, skBegin: String): List<Table> {
+        val queryConditional = QueryConditional
+            .sortBeginsWith(
+                Key.builder()
+                    .partitionValue(pk)
+                    .sortValue(skBegin)
+                    .build()
+            )
+
+        return dynamoDBTable
+            .query(queryConditional)
+            .flatMap { it.items() }
     }
 
     override fun findAllByGSI(indexName: String, pk: String): List<Table> {
