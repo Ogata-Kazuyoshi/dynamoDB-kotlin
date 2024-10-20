@@ -3,12 +3,11 @@ package com.example.testdoubletemplate.repository
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable
 import software.amazon.awssdk.enhanced.dynamodb.Key
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest
-import java.util.stream.Collectors
 
 interface NoSQLRepository<Table> {
     fun findAllByPK(pk: String): List<Table>
     fun findItemByPKandSK(pk: String, sk: String): Table?
+    fun findAllByGSI(indexName: String, pk: String): List<Table>
 }
 
 class DynamoDBRepository<Table> (
@@ -22,15 +21,9 @@ class DynamoDBRepository<Table> (
                     .build()
             )
 
-        val request = QueryEnhancedRequest.builder()
-            .queryConditional(queryConditional)
-            .build()
-
         return dynamoDBTable
-            .query(request)
-            .stream()
-            .flatMap { page -> page.items().stream() }
-            .collect(Collectors.toList())
+            .query(queryConditional)
+            .flatMap { it.items() }
     }
 
     override fun findItemByPKandSK(pk: String, sk: String): Table? {
@@ -44,5 +37,19 @@ class DynamoDBRepository<Table> (
         } catch (e: Exception) {
             null
         }
+    }
+
+    override fun findAllByGSI(indexName: String, pk: String): List<Table> {
+        val queryConditional = QueryConditional
+            .keyEqualTo(
+                Key.builder()
+                    .partitionValue(pk)
+                    .build()
+            )
+
+        return dynamoDBTable
+            .index(indexName)
+            .query(queryConditional)
+            .flatMap { it.items() }
     }
 }
