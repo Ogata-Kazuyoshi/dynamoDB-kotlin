@@ -9,6 +9,8 @@ interface NoSQLRepository<Table> {
     fun findItemByPKandSK(pk: String, sk: String): Table?
     fun findAllByPKandSKBegin(pk: String, skBegin: String): List<Table>
     fun findAllByGSI(indexName: String, pk: String): List<Table>
+    fun findAllByPKInLSI(indexName: String, pk: String): List<Table>
+    fun putItem(item: Table)
 }
 
 class DynamoDBRepository<Table> (
@@ -21,7 +23,6 @@ class DynamoDBRepository<Table> (
                     .partitionValue(pk)
                     .build()
             )
-
         return dynamoDBQueryForOriginalTable(queryConditional)
     }
 
@@ -61,15 +62,31 @@ class DynamoDBRepository<Table> (
         return dynamoDBQueryForSecondaryTable(indexName, queryConditional)
     }
 
+    override fun findAllByPKInLSI(indexName: String, pk: String): List<Table> {
+        val queryConditional = QueryConditional
+            .keyEqualTo(
+                Key.builder()
+                    .partitionValue(pk)
+                    .build()
+            )
+
+
+        return dynamoDBQueryForSecondaryTable(indexName, queryConditional)
+    }
+
+    override fun putItem(item: Table) {
+        dynamoDBTable.putItem(item)
+    }
+
     private fun dynamoDBQueryForOriginalTable(
-        queryConditional: QueryConditional?
+        queryConditional: QueryConditional
     ) = dynamoDBTable
         .query(queryConditional)
         .flatMap { it.items() }
 
     private fun dynamoDBQueryForSecondaryTable(
         indexName: String,
-        queryConditional: QueryConditional?
+        queryConditional: QueryConditional
     ) = dynamoDBTable
         .index(indexName)
         .query(queryConditional)

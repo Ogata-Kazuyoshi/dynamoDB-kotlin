@@ -16,15 +16,15 @@ data class JapanTableEntity(
     var mainSk: String = "",
 
     @get:DynamoDbSecondaryPartitionKey(indexNames = ["BelongPrefectureGSI"])
-    var belongPrefecture: String = "",
+    var belongPrefecture: String? = null ,
 
     @get:DynamoDbSecondarySortKey(indexNames = ["AreaOfPrefectureLSI"])
     var areaOfPrefecture: Double = 0.0,
     @get:DynamoDbSecondarySortKey(indexNames = ["PopulationOfPrefectureLSI"])
     var populationOfPrefecture: Int = 0,
     var metropolitan: String = "",
-    var areaOfCity: Double = 0.0,
-    var populationOfCity: Int = 0,
+    var areaOfCity: Double? = null,
+    var populationOfCity: Int? = null,
 )
 
 fun JapanTableEntity.toPrefecture(): Prefecture {
@@ -39,11 +39,11 @@ fun JapanTableEntity.toPrefecture(): Prefecture {
 fun JapanTableEntity.toCity(): City {
     return City(
         cityName = this.mainSk,
-        belongPrefecture = this.belongPrefecture,
+        belongPrefecture = this.belongPrefecture!!,
         areaOfPrefecture = this.areaOfPrefecture,
         populationOfPrefecture = this.populationOfPrefecture,
         metropolitan = this.metropolitan,
-        areaOfCity = this.areaOfCity,
-        populationOfCity = this.populationOfCity,
+        areaOfCity = this.areaOfCity!!,
+        populationOfCity = this.populationOfCity!!,
     )
 }

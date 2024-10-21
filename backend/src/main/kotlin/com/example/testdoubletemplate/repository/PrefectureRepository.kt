@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository
 
 interface PrefectureRepository {
     fun findAllPrefectures(): List<Prefecture>
+    fun putPrefecture(item: JapanTableEntity)
+    fun findPrefecturesByAreaSize(): List<Prefecture>
+    fun findPrefecturesByPopulation(): List<Prefecture>
     fun findPrefecture(sk: String): Prefecture?
     fun findNearPrefectures(prefectureName: String): List<Prefecture>
 }
@@ -18,6 +21,24 @@ class DefaultPrefectureRepository(
     override fun findAllPrefectures(): List<Prefecture> {
         return dynamoDBRepository.findAllByPK("Prefecture")
             .map { it.toPrefecture()}
+    }
+
+    override fun putPrefecture(item: JapanTableEntity) {
+        dynamoDBRepository.putItem(item)
+    }
+
+    override fun findPrefecturesByAreaSize(): List<Prefecture> {
+        return dynamoDBRepository.findAllByPKInLSI(
+            "AreaOfPrefectureLSI",
+            "Prefecture"
+        ).map { it.toPrefecture() }
+    }
+
+    override fun findPrefecturesByPopulation(): List<Prefecture> {
+        return dynamoDBRepository.findAllByPKInLSI(
+            "PopulationOfPrefectureLSI",
+            "Prefecture"
+        ).map { it.toPrefecture() }
     }
 
     override fun findPrefecture(sk: String): Prefecture? {
