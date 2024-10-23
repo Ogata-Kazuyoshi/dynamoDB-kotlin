@@ -19,10 +19,10 @@ data class JapanTableEntity(
     var belongPrefecture: String? = null ,
 
     @get:DynamoDbSecondarySortKey(indexNames = ["AreaOfPrefectureLSI"])
-    var areaOfPrefecture: Double = 0.0,
+    var areaOfPrefecture: Double? = null,
     @get:DynamoDbSecondarySortKey(indexNames = ["PopulationOfPrefectureLSI"])
-    var populationOfPrefecture: Int = 0,
-    var metropolitan: String = "",
+    var populationOfPrefecture: Int? = null,
+    var metropolitan: String? = null,
     var areaOfCity: Double? = null,
     var populationOfCity: Int? = null,
 )
@@ -30,20 +30,20 @@ data class JapanTableEntity(
 fun JapanTableEntity.toPrefecture(): Prefecture {
     return Prefecture(
         prefectureName = this.mainSk,
-        areaOfPrefecture = this.areaOfPrefecture,
-        populationOfPrefecture = this.populationOfPrefecture,
-        metropolitan = this.metropolitan,
+        areaOfPrefecture = this.areaOfPrefecture?: 0.0,
+        populationOfPrefecture = this.populationOfPrefecture?: 0,
+        metropolitan = this.metropolitan?: "",
     )
 }
 
 fun JapanTableEntity.toCity(): City {
     return City(
         cityName = this.mainSk,
-        belongPrefecture = this.belongPrefecture!!,
-        areaOfPrefecture = this.areaOfPrefecture,
-        populationOfPrefecture = this.populationOfPrefecture,
-        metropolitan = this.metropolitan,
-        areaOfCity = this.areaOfCity!!,
-        populationOfCity = this.populationOfCity!!,
+        belongPrefecture = this.belongPrefecture?: "",
+        areaOfPrefecture = this.areaOfPrefecture?: 0.0,
+        populationOfPrefecture = this.populationOfPrefecture?: 0,
+        metropolitan = this.metropolitan?: "",
+        areaOfCity = this.areaOfCity?: 0.0,
+        populationOfCity = this.populationOfCity?: 0,
     )
 }
