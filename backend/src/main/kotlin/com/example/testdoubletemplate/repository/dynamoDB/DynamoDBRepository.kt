@@ -1,4 +1,4 @@
-package com.example.testdoubletemplate.repository
+package com.example.testdoubletemplate.repository.dynamoDB
 
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable
 import software.amazon.awssdk.enhanced.dynamodb.Key

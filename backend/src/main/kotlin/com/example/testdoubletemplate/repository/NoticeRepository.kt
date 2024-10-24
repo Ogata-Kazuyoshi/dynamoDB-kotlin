@@ -3,21 +3,18 @@ package com.example.testdoubletemplate.repository
 import com.example.testdoubletemplate.config.DynamoDBGenerator
 import com.example.testdoubletemplate.entity.InformationTableEntity
 import com.example.testdoubletemplate.model.Notice
-import org.springframework.beans.factory.annotation.Value
+import com.example.testdoubletemplate.repository.dynamoDB.BaseRepository
 import org.springframework.stereotype.Repository
 
-interface NoticeRepository {
+interface NoticeRepository: BaseRepository {
     fun findAllNoticeList(): List<Notice>
 }
 
 @Repository
 class DefaultNoticeRepository(
     dynamoDBGenerator: DynamoDBGenerator,
-    @Value("\${spring.profiles.active}")
-    private val environment: String
 ): NoticeRepository {
-    private val dynamoDBRepository: NoSQLRepository<InformationTableEntity> =
-        dynamoDBGenerator.build("information_table_${environment}")
+    override val dynamoDBRepository = dynamoDBGenerator.build<InformationTableEntity>()
 
     override fun findAllNoticeList(): List<Notice> {
         return dynamoDBRepository

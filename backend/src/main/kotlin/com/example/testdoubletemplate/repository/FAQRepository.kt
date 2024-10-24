@@ -3,22 +3,19 @@ package com.example.testdoubletemplate.repository
 import com.example.testdoubletemplate.config.DynamoDBGenerator
 import com.example.testdoubletemplate.entity.InformationTableEntity
 import com.example.testdoubletemplate.model.FAQ
-import org.springframework.beans.factory.annotation.Value
+import com.example.testdoubletemplate.repository.dynamoDB.BaseRepository
 import org.springframework.stereotype.Repository
 
 
-interface FAQRepository {
+interface FAQRepository: BaseRepository {
     fun findAllFAQList(): List<FAQ>
 }
 
 @Repository
 class DefaultFAQRepository(
     dynamoDBGenerator: DynamoDBGenerator,
-    @Value("\${spring.profiles.active}")
-    private val environment: String
 ): FAQRepository {
-    private val dynamoDBRepository: NoSQLRepository<InformationTableEntity> =
-        dynamoDBGenerator.build("information_table_${environment}")
+    override val dynamoDBRepository = dynamoDBGenerator.build<InformationTableEntity>()
 
     override fun findAllFAQList(): List<FAQ> {
         return dynamoDBRepository
@@ -31,5 +28,4 @@ class DefaultFAQRepository(
                 questionCreateAt = it.questionCreateAt
             ) }
     }
-
 }

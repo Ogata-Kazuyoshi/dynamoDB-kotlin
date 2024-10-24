@@ -4,10 +4,10 @@ import com.example.testdoubletemplate.config.DynamoDBGenerator
 import com.example.testdoubletemplate.entity.JapanTableEntity
 import com.example.testdoubletemplate.entity.toPrefecture
 import com.example.testdoubletemplate.model.Prefecture
-import org.springframework.beans.factory.annotation.Value
+import com.example.testdoubletemplate.repository.dynamoDB.BaseRepository
 import org.springframework.stereotype.Repository
 
-interface PrefectureRepository {
+interface PrefectureRepository: BaseRepository {
     fun findAllPrefectures(): List<Prefecture>
     fun putPrefecture(item: JapanTableEntity)
     fun findPrefecturesByAreaSize(): List<Prefecture>
@@ -19,11 +19,8 @@ interface PrefectureRepository {
 @Repository
 class DefaultPrefectureRepository(
     dynamoDBGenerator: DynamoDBGenerator,
-    @Value("\${spring.profiles.active}")
-    private val environment: String
 ): PrefectureRepository{
-    private val dynamoDBRepository: NoSQLRepository<JapanTableEntity> =
-        dynamoDBGenerator.build("japan_table_${environment}")
+    override val dynamoDBRepository = dynamoDBGenerator.build<JapanTableEntity>()
     override fun findAllPrefectures(): List<Prefecture> {
         return dynamoDBRepository.findAllByPK("Prefecture")
             .map { it.toPrefecture()}

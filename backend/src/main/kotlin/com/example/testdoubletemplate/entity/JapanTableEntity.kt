@@ -25,7 +25,11 @@ data class JapanTableEntity(
     var metropolitan: String? = null,
     var areaOfCity: Double? = null,
     var populationOfCity: Int? = null,
-)
+): TableEntity {
+    override val tableName: String
+        get() = "japan_table"
+
+}
 
 fun JapanTableEntity.toPrefecture(): Prefecture {
     return Prefecture(

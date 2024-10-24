@@ -4,10 +4,10 @@ import com.example.testdoubletemplate.config.DynamoDBGenerator
 import com.example.testdoubletemplate.entity.JapanTableEntity
 import com.example.testdoubletemplate.entity.toCity
 import com.example.testdoubletemplate.model.City
-import org.springframework.beans.factory.annotation.Value
+import com.example.testdoubletemplate.repository.dynamoDB.BaseRepository
 import org.springframework.stereotype.Repository
 
-interface CityRepository {
+interface CityRepository: BaseRepository {
     fun findAllCities(): List<City>
     fun findCitiesByPrefecture(prefecture: String): List<City>
     fun findCityByCityName(cityName: String): City?
@@ -16,11 +16,9 @@ interface CityRepository {
 @Repository
 class DefaultCityRepository(
     dynamoDBGenerator: DynamoDBGenerator,
-    @Value("\${spring.profiles.active}")
-    private val environment: String
 ): CityRepository{
-    private val dynamoDBRepository: NoSQLRepository<JapanTableEntity> =
-        dynamoDBGenerator.build("japan_table_${environment}")
+    override val dynamoDBRepository = dynamoDBGenerator.build<JapanTableEntity>()
+
     override fun findAllCities(): List<City> {
         return dynamoDBRepository.findAllByPK("City").map { it.toCity() }
     }
@@ -39,5 +37,6 @@ class DefaultCityRepository(
         )
         return item?.toCity()
     }
+
 
 }

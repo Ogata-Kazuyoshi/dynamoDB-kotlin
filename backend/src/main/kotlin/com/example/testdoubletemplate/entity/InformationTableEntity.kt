@@ -20,4 +20,8 @@ data class InformationTableEntity(
     var noticeTag: String = "",
     var noticeDescription: String = "",
     var noticeCreateAt: String = ""
-)
+): TableEntity {
+    override val tableName: String
+        get() = "information_table"
+
+}

@@ -1,5 +1,6 @@
 package com.example.testdoubletemplate.repository
 
+import com.example.testdoubletemplate.repository.dynamoDB.DynamoDBRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
