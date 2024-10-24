@@ -1,10 +1,16 @@
-const AWS = require('aws-sdk');
+import AWS from "aws-sdk"
 
 const environment = process.argv[2];
-const dynamoDB = environment === "local" ? new AWS.DynamoDB.DocumentClient({
+const dynamoDB = environment === "local" ?  new AWS.DynamoDB.DocumentClient({
     region: 'localhost',
-    endpoint: 'http://localhost:8086'
-}): {};
+    endpoint: 'http://localhost:8086',
+    credentials: {
+        accessKeyId: 'dummy',
+        secretAccessKey: 'dummy',
+    },
+}): new AWS.DynamoDB.DocumentClient({
+    region: 'ap-northeast-1',
+})
 
 // データを流し込む関数
 async function seedData() {
