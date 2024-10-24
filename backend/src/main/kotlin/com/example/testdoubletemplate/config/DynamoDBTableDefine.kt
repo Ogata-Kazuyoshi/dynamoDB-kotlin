@@ -16,7 +16,7 @@ class DynamoDBTableDefine(
         @Value("\${spring.profiles.active}")
         environment: String
     ):NoSQLRepository<InformationTableEntity>{
-        return createDynamoDBRepository("information_table_${environment}")
+        return dynamoDBTableGenerator.build("information_table_${environment}")
     }
 
     @Bean
@@ -24,15 +24,6 @@ class DynamoDBTableDefine(
         @Value("\${spring.profiles.active}")
         environment: String
     ):NoSQLRepository<JapanTableEntity>{
-        return createDynamoDBRepository("japan_table_${environment}")
-    }
-
-    private inline fun <reified T> createDynamoDBRepository(
-        tableName: String
-    ): NoSQLRepository<T> {
-        return dynamoDBTableGenerator.build(
-            tableName = tableName,
-            schema = T::class.java
-        )
+        return dynamoDBTableGenerator.build("japan_table_${environment}")
     }
 }

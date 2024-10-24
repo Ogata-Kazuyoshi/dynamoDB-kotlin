@@ -8,15 +8,14 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema
 
 @Component
 class DynamoDBTableGenerator(
-    private val dynamoDbClient: DynamoDbEnhancedClient,
+    val dynamoDbClient: DynamoDbEnhancedClient,
 ) {
-    fun <Table> build(
+    final inline fun <reified Table> build(
         tableName: String,
-        schema: Class<Table>,
     ): NoSQLRepository<Table>{
         val dynamoDBTable = dynamoDbClient.table(
             tableName,
-            TableSchema.fromBean(schema)
+            TableSchema.fromBean(Table::class.java)
         )
         return DynamoDBRepository(dynamoDBTable)
     }
