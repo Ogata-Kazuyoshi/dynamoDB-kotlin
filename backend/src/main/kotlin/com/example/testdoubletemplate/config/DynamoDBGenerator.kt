@@ -7,7 +7,7 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema
 
 @Component
-class DynamoDBTableGenerator(
+class DynamoDBGenerator(
     val dynamoDbClient: DynamoDbEnhancedClient,
 ) {
     final inline fun <reified Table> build(

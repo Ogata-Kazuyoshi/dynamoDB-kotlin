@@ -1,8 +1,10 @@
 package com.example.testdoubletemplate.repository
 
+import com.example.testdoubletemplate.config.DynamoDBGenerator
 import com.example.testdoubletemplate.entity.JapanTableEntity
 import com.example.testdoubletemplate.entity.toCity
 import com.example.testdoubletemplate.model.City
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Repository
 
 interface CityRepository {
@@ -13,8 +15,12 @@ interface CityRepository {
 
 @Repository
 class DefaultCityRepository(
-    val dynamoDBRepository: NoSQLRepository<JapanTableEntity>
+    dynamoDBGenerator: DynamoDBGenerator,
+    @Value("\${spring.profiles.active}")
+    private val environment: String
 ): CityRepository{
+    private val dynamoDBRepository: NoSQLRepository<JapanTableEntity> =
+        dynamoDBGenerator.build("japan_table_${environment}")
     override fun findAllCities(): List<City> {
         return dynamoDBRepository.findAllByPK("City").map { it.toCity() }
     }
