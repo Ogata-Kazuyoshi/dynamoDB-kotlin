@@ -8,18 +8,25 @@ import org.springframework.stereotype.Component
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema
 
+interface DynamoDBFactory {
+    fun <Table : TableEntity> build(tableClass: Class<Table>): NoSQLRepository<Table>
+
+}
+
+
 @Component
-class DynamoDBGenerator(
+class DefaultDynamoDBFactory(
     @Value("\${spring.profiles.active}")
     val enrivonment: String,
     val dynamoDbClient: DynamoDbEnhancedClient,
-) {
-    final inline fun <reified Table: TableEntity> build(): NoSQLRepository<Table> {
-        val instance = Table::class.java.getConstructor().newInstance()
+): DynamoDBFactory {
+    override fun <Table: TableEntity> build(tableClass: Class<Table>): NoSQLRepository<Table> {
+        val instance = tableClass.getConstructor().newInstance()
         val dynamoDBTable = dynamoDbClient.table(
             "${instance.tableName}_$enrivonment",
-            TableSchema.fromBean(Table::class.java)
+            TableSchema.fromBean(tableClass)
         )
         return DynamoDBRepository(dynamoDBTable)
     }
+
 }

@@ -1,6 +1,6 @@
 package com.example.testdoubletemplate.repository
 
-import com.example.testdoubletemplate.config.DynamoDBGenerator
+import com.example.testdoubletemplate.config.DynamoDBFactory
 import com.example.testdoubletemplate.entity.InformationTableEntity
 import com.example.testdoubletemplate.model.Notice
 import com.example.testdoubletemplate.repository.dynamoDB.BaseRepository
@@ -12,9 +12,9 @@ interface NoticeRepository: BaseRepository {
 
 @Repository
 class DefaultNoticeRepository(
-    dynamoDBGenerator: DynamoDBGenerator,
+    dynamoDBFactory: DynamoDBFactory,
 ): NoticeRepository {
-    override val dynamoDBRepository = dynamoDBGenerator.build<InformationTableEntity>()
+    override val dynamoDBRepository = dynamoDBFactory.build(InformationTableEntity::class.java)
 
     override fun findAllNoticeList(): List<Notice> {
         return dynamoDBRepository

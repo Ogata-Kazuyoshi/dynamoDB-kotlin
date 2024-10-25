@@ -1,6 +1,6 @@
 package com.example.testdoubletemplate.repository
 
-import com.example.testdoubletemplate.config.DynamoDBGenerator
+import com.example.testdoubletemplate.config.DynamoDBFactory
 import com.example.testdoubletemplate.entity.InformationTableEntity
 import com.example.testdoubletemplate.model.FAQ
 import com.example.testdoubletemplate.repository.dynamoDB.BaseRepository
@@ -13,9 +13,10 @@ interface FAQRepository: BaseRepository {
 
 @Repository
 class DefaultFAQRepository(
-    dynamoDBGenerator: DynamoDBGenerator,
+    dynamoDBFactory: DynamoDBFactory,
 ): FAQRepository {
-    override val dynamoDBRepository = dynamoDBGenerator.build<InformationTableEntity>()
+    override val dynamoDBRepository
+        = dynamoDBFactory.build(InformationTableEntity::class.java)
 
     override fun findAllFAQList(): List<FAQ> {
         return dynamoDBRepository

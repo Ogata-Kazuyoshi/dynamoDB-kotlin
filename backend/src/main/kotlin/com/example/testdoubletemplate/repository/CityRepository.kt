@@ -1,6 +1,6 @@
 package com.example.testdoubletemplate.repository
 
-import com.example.testdoubletemplate.config.DynamoDBGenerator
+import com.example.testdoubletemplate.config.DynamoDBFactory
 import com.example.testdoubletemplate.entity.JapanTableEntity
 import com.example.testdoubletemplate.entity.toCity
 import com.example.testdoubletemplate.model.City
@@ -15,9 +15,9 @@ interface CityRepository: BaseRepository {
 
 @Repository
 class DefaultCityRepository(
-    dynamoDBGenerator: DynamoDBGenerator,
+    dynamoDBFactory : DynamoDBFactory,
 ): CityRepository{
-    override val dynamoDBRepository = dynamoDBGenerator.build<JapanTableEntity>()
+    override val dynamoDBRepository = dynamoDBFactory.build(JapanTableEntity::class.java)
 
     override fun findAllCities(): List<City> {
         return dynamoDBRepository.findAllByPK("City").map { it.toCity() }

@@ -1,6 +1,6 @@
 package com.example.testdoubletemplate.repository
 
-import com.example.testdoubletemplate.config.DynamoDBGenerator
+import com.example.testdoubletemplate.config.DynamoDBFactory
 import com.example.testdoubletemplate.entity.JapanTableEntity
 import com.example.testdoubletemplate.entity.toPrefecture
 import com.example.testdoubletemplate.model.Prefecture
@@ -18,9 +18,9 @@ interface PrefectureRepository: BaseRepository {
 
 @Repository
 class DefaultPrefectureRepository(
-    dynamoDBGenerator: DynamoDBGenerator,
+    dynamoDBFactory: DynamoDBFactory,
 ): PrefectureRepository{
-    override val dynamoDBRepository = dynamoDBGenerator.build<JapanTableEntity>()
+    override val dynamoDBRepository = dynamoDBFactory.build(JapanTableEntity::class.java)
     override fun findAllPrefectures(): List<Prefecture> {
         return dynamoDBRepository.findAllByPK("Prefecture")
             .map { it.toPrefecture()}

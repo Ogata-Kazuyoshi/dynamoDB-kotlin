@@ -27,6 +27,7 @@ dependencies {
 
 	implementation("software.amazon.awssdk:dynamodb-enhanced:2.28.16")
 	implementation("software.amazon.awssdk:dynamodb:2.28.16")
+	testImplementation("io.mockk:mockk:1.13.7")
 }
 
 tasks.withType<KotlinCompile> {
